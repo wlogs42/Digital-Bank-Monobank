@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------
+   Хрю Банк — design tokens (Tailwind v4 CSS-first config)
+--------------------------------------------------------- */
+@theme {
+  --font-display: "Golos Text", "Inter", sans-serif;
+  --font-body: "Inter", "Golos Text", sans-serif;
+
+  /* base */
+  --color-ink: #0a0a0f;
+  --color-surface: #15151d;
+  --color-surface-2: #1c1c26;
+  --color-surface-3: #24242f;
+  --color-stroke: #2a2a36;
+
+  /* text */
+  --color-fg: #f4f4f7;
+  --color-muted: #90909e;
+  --color-faint: #5c5c68;
+
+  /* brand — piggy pink */
+  --color-brand-100: #ffe3ef;
+  --color-brand-300: #ff9dc2;
+  --color-brand-500: #ff3e82;
+  --color-brand-600: #e8226b;
+  --color-brand-700: #b81657;
+
+  /* secondary accents (analytics, savings) */
+  --color-violet: #8b7cf6;
+  --color-blue: #4f8ef7;
+  --color-mint: #35d07f;
+  --color-amber: #f7b84f;
+
+  --radius-card: 1.5rem;
+  --radius-tile: 1.25rem;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+  ::selection {
+    background: var(--color-brand-500);
+    color: white;
+  }
+}
+
+@layer utilities {
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}

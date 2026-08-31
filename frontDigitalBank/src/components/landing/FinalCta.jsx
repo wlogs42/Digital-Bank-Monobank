@@ -22,7 +22,7 @@ export default function FinalCta() {
             as={Link}
             to="/register"
             size="lg"
-            className="relative mt-8 bg-white text-brand-600 hover:bg-white/90 shadow-none"
+            className="relative mt-8 bg-black text-brand-600 hover:bg-black/90 shadow-none"
           >
             Стати клієнтом
             <ArrowRight size={18} />

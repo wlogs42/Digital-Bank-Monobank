@@ -6,8 +6,8 @@ export default function AppRouter(){
     return(
         <Routes>
             {/* публ сторінки */}
-            <Route element={PublicLayout}>
-                <Route path="/" element={FullLandingPage}></Route>
+            <Route element={<PublicLayout />}>
+                <Route path="/" element={<FullLandingPage/>}></Route>
 
             </Route>
 
