@@ -67,7 +67,7 @@ export default function Hero() {
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <BankCard balance="24 582.40 ₴" last4="4441" tilt />
+            <BankCard balance="35 458.40 ₴" last4="4441" tilt />
           </motion.div>
 
           <motion.div
