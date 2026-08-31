@@ -2,11 +2,25 @@ using DigitalBank.API;
 using DigitalBank.API.Contracts;
 using DigitalBank.Application.Services;
 
+const string FrontendCorsPolicy = "FrontendCorsPolicy";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(FrontendCorsPolicy, policy =>
+    {
+        policy.WithOrigins("http://localhost:5199")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors(FrontendCorsPolicy);
 
 app.MapGet("/", () => "Hello World!");
 
