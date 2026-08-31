@@ -1,4 +1,7 @@
-using DigitalBank.Domain.Persistence;
+using DigitalBank.Application.Interfaces;
+using DigitalBank.Application.Services;
+using DigitalBank.Infrastructure.Persistence;
+using DigitalBank.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +17,13 @@ public static class DependencyInjection
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString));
+
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICardRepository, CardRepository>();
+
+        services.AddScoped<RegisterUserService>();
+        services.AddScoped<LoginService>();
+        services.AddScoped<CreateCardService>();
 
         return services;
     }
