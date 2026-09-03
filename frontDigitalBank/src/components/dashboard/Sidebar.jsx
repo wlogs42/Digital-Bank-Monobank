@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import {
-  Home, Wallet, CreditCard, ArrowLeftRight, Repeat,
+  Home, Wallet, ArrowLeftRight, Repeat,
   PiggyBank, BarChart3, History, Settings, LogOut,
 } from 'lucide-react'
 import Logo from '../common/Logo'
