@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight, Zap } from 'lucide-react'
 import Button from '../common/Button'
-import BankCard from '../common/BankCard'
+import BankCard from '../common/DemoCard'
 import Container from '../common/Container'
 
 export default function Hero() {

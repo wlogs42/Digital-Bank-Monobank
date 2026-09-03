@@ -1,6 +1,8 @@
 using DigitalBank.API;
 using DigitalBank.API.Contracts;
+using DigitalBank.Application.Interfaces;
 using DigitalBank.Application.Services;
+using System.Threading;
 
 const string FrontendCorsPolicy = "FrontendCorsPolicy";
 
@@ -47,13 +49,19 @@ app.MapPost("/login", async (LoginRequest request, LoginService service, Cancell
 app.MapPost("/cards", async (CreateCardRequest request, CreateCardService service, CancellationToken cancellationToken) =>
 {
     var (card, error) = await service.CreateAsync(
-        request.UserId, request.CardNumber, request.ExpirationDate, request.SecurityCode,
-        request.CardType, request.Name, request.FirstName, request.InitialAmount, request.Currency,
+        request.UserId, request.CardType, request.Name, 
+        request.FirstName, request.InitialAmount, request.Currency,
         cancellationToken);
 
     return card is null
         ? Results.BadRequest(new { error })
         : Results.Ok(CardResponse.FromDomain(card));
+});
+
+app.MapGet("/cards/user/{userId:int}", async (int userId, ICardRepository cardRepo, CancellationToken cancellationToken) =>
+{
+    var cards = await cardRepo.GetByUserIdAsync(userId, cancellationToken);
+    return Results.Ok(cards.Select(CardResponse.FromDomain));
 });
 
 app.Run();

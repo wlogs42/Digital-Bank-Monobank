@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -17,7 +17,7 @@ const loginSchema = z.object({
 
 export default function LoginPage() {
   const [serverError, setServerError] = useState('')
-  const [loggedInUser, setLoggedInUser] = useState(null)
+  const navigate = useNavigate()
   const setUser = useAuthStore((state) => state.setUser)
 
   const {
@@ -34,25 +34,13 @@ export default function LoginPage() {
     try {
       const user = await loginUser(data)
       setUser(user)
-      setLoggedInUser(user)
+      navigate('/dashboard', {replace: true})
     } catch (err) {
       setServerError(err.response?.data?.error ?? 'Щось пішло не так, спробуйте ще раз')
     }
   }
 
-  if (loggedInUser) {
-    return (
-      <div className="relative">
-        <Navbar />
-        <main className="pt-32 pb-20">
-          <Container className="max-w-md text-center">
-            <h1 className="font-display text-2xl font-bold">З поверненням, {loggedInUser.userFirstName}!</h1>
-            <p className="mt-3 text-muted">Ви увійшли як {loggedInUser.userName}.</p>
-          </Container>
-        </main>
-      </div>
-    )
-  }
+  
 
   return (
     <div className="relative">

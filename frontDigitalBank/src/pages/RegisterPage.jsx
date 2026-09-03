@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -32,8 +32,8 @@ const registerSchema = z
 
 export default function RegisterPage() {
   const [serverError, setServerError] = useState('')
-  const [registeredUser, setRegisteredUser] = useState(null)
   const setUser = useAuthStore((state) => state.setUser)
+  const navigate = useNavigate()
 
   const {
     register,
@@ -58,25 +58,13 @@ export default function RegisterPage() {
     try {
       const user = await registerUser(payload)
       setUser(user)
-      setRegisteredUser(user)
+      navigate('/dashboard', {replace: true})
     } catch (err) {
       setServerError(err.response?.data?.error ?? 'Щось пішло не так, спробуйте ще раз')
     }
   }
 
-  if (registeredUser) {
-    return (
-      <div className="relative">
-        <Navbar />
-        <main className="pt-32 pb-20">
-          <Container className="max-w-md text-center">
-            <h1 className="font-display text-2xl font-bold">Вітаємо, {registeredUser.userFirstName}!</h1>
-            <p className="mt-3 text-muted">Акаунт {registeredUser.userName} успішно створено.</p>
-          </Container>
-        </main>
-      </div>
-    )
-  }
+  
 
   return (
     <div className="relative">

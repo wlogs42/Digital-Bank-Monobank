@@ -1,48 +1,64 @@
-import clsx from 'clsx'
+import { useState } from 'react'
+import { Eye, EyeOff, Copy, Check } from 'lucide-react'
 
-/*
-Visual bank-card tile — used in landing hero mockup, registration success screen,
- and dashboard card carousel.
- */
-export default function BankCard({
-  holder = 'Хрю Банк',
-  last4 = '4441',
-  balance,
-  scheme = 'visa',
-  variant = 'primary',
-  className = '',
-  tilt = false,
-}) {
+const currencyNames = ['UAH', 'USD', 'EUR']
+const currencySymbols = { UAH: '₴', USD: '$', EUR: '€' }
+
+const gradients = {
+  Debit: 'from-pink-500 via-rose-500 to-pink-700',
+  Credit: 'from-neutral-700 via-neutral-800 to-black',
+}
+
+const maskNumber = (number) => `•••• •••• •••• ${number.slice(-4)}`
+const formatFullNumber = (number) => number.replace(/(\d{4})(?=\d)/g, '$1 ')
+
+export default function BankCard({ card }) {
+  const [revealed, setRevealed] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const currency = currencyNames[card.balanceCurrency] ?? 'UAH'
+  const gradient = gradients[card.cardType] ?? gradients.Debit
+
+  const handleCopy = async (e) => {
+    e.stopPropagation()
+    await navigator.clipboard.writeText(card.cardNumber)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+
   return (
-    <div
-      className={clsx(
-        'relative overflow-hidden rounded-card p-6 w-full aspect-[1.586/1] shadow-2xl',
-        variant === 'primary' &&
-          'bg-gradient-to-br from-[#2a2a35] to-[#101014] border border-white/10',
-        variant === 'salary' && 'bg-gradient-to-br from-brand-600 to-brand-500',
-        tilt && 'rotate-3',
-        className
-      )}
-    >
-      <div className="absolute -right-6 -bottom-8 opacity-[0.14]">
-        <svg width="180" height="180" viewBox="0 0 64 64" fill="none">
-          <ellipse cx="32" cy="37" rx="24" ry="17" fill="white" />
-          <ellipse cx="32" cy="28" rx="9" ry="6" fill="white" />
-        </svg>
+    <div className={`relative flex h-44 flex-col justify-between overflow-hidden rounded-card bg-gradient-to-br ${gradient} p-5 text-white shadow-card`}>
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-white/80">
+          {card.cardType === 'Credit' ? 'Кредитна картка' : 'Основна картка'}
+        </span>
+        <button
+          onClick={() => setRevealed((r) => !r)}
+          className="rounded-full p-1 hover:bg-white/10"
+          aria-label="Показати номер картки"
+        >
+          {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
+        </button>
       </div>
-      <div className="relative flex h-full flex-col justify-between">
-        <span className="font-display font-semibold text-white/90">{holder}</span>
-        <div>
-          <p className="text-white/60 text-sm mb-1 tracking-wider">•••• {last4}</p>
-          {balance && (
-            <p className="text-2xl font-display font-bold text-white">{balance}</p>
+
+      <p className="font-display text-2xl font-bold tracking-tight">
+        {(card.balanceAmount)} <span className="text-white/70">{currencySymbols[currency]}</span>
+      </p>
+
+      <div className="flex items-end justify-between">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-sm tracking-widest text-white/90">
+            {revealed ? formatFullNumber(card.cardNumber) : maskNumber(card.cardNumber)}
+          </span>
+          {revealed && (
+            <button onClick={handleCopy} className="rounded-full p-1 hover:bg-white/10" aria-label="Копіювати номер">
+              {copied ? <Check size={14} /> : <Copy size={14} />}
+            </button>
           )}
         </div>
-        <div className="flex justify-end">
-          <span className="font-display italic font-bold text-xl text-white">
-            {scheme === 'visa' ? 'VISA' : 'Mastercard'}
-          </span>
-        </div>
+        <span className="text-xs font-semibold uppercase text-white/70">
+          {card.cardType === 'Credit' ? 'Mastercard' : 'Visa'}
+        </span>
       </div>
     </div>
   )

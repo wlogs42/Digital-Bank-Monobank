@@ -17,9 +17,6 @@ public class CreateCardService
 
     public async Task<(Card? Card, string Error)> CreateAsync(
         int userId,
-        string cardNumber,
-        string expirationDate,
-        string securityCode,
         string cardType,
         string name,
         string firstName,
@@ -31,17 +28,28 @@ public class CreateCardService
         if (user is null)
             return (null, "User not found.");
 
-        var existingCard = await _cardRepository.GetByCardNumberAsync(cardNumber, cancellationToken);
-        if (existingCard is not null)
-            return (null, "A card with this number already exists.");
+        //var existingCard = await _cardRepository.GetByCardNumberAsync(cardNumber, cancellationToken);
+        //if (existingCard is not null)
+        //    return (null, "A card with this number already exists.");
 
         var (balance, balanceError) = Money.Create(initialAmount, currency);
         if (balance is null)
             return (null, balanceError);
 
+
+
+        string cardNumber;
+        do
+        {
+            cardNumber = CardNumberGenerator.GenerateCardNumber();
+        }
+        while(await _cardRepository.GetByCardNumberAsync(cardNumber,cancellationToken) is not null);
+
         var (card, error) = Card.Create(
-            0, userId, cardNumber, expirationDate,
-            securityCode, cardType, name, firstName, balance);
+            0, userId, cardNumber, 
+            CardNumberGenerator.GenerateExpirationDate(),
+            CardNumberGenerator.GenerateSecurityCode(), cardType, name, firstName, balance);
+
 
         if (card is null)
             return (null, error);
