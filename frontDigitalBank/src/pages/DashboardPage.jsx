@@ -52,7 +52,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div className="hidden items-center justify-between lg:flex">
-        <p className="text-sm text-muted">Привіт, {user?.firstName || 'друже'} 👋</p>
+        <p className="text-sm text-muted">Привіт, {user?.firstName || 'друже'}</p>
         <div className="flex items-center gap-5 text-muted">
           <Search size={20} className="cursor-pointer hover:text-fg" />
           <div className="relative cursor-pointer hover:text-fg">

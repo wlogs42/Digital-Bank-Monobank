@@ -9,7 +9,6 @@ import { useAuthStore } from '../../store/useAuthStore'
 const items = [
   { label: 'Головна', icon: Home, to: '/dashboard', enabled: true },
   { label: 'Рахунки', icon: Wallet, to: '#', enabled: false },
-  { label: 'Картки', icon: CreditCard, to: '#', enabled: false },
   { label: 'Платежі', icon: ArrowLeftRight, to: '#', enabled: false },
   { label: 'Перекази', icon: Repeat, to: '#', enabled: false },
   { label: 'Скарбнички', icon: PiggyBank, to: '#', enabled: false },
