@@ -12,7 +12,7 @@ const items= [
   { label: 'Рахунки', icon: Wallet, to: '#', enabled: false },
   { label: 'Перекази', icon: Repeat, to: '#', enabled: false },
   { label: 'Платежі', icon: ArrowLeftRight, to: '#', enabled: false },
-  { label: 'Накопичення', icon: PiggyBank, to: '#', enabled: false },
+  { label: 'Накопичення', icon: PiggyBank, to: '/savings', enabled: true },
   { label: 'Кредити', icon: Percent, to: '/credit', enabled: true },
   { label: 'Ще', icon: MoreHorizontal, to: '#', enabled: false },
 ]

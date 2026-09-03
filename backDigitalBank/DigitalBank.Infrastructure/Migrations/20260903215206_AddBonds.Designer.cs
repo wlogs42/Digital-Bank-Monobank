@@ -4,6 +4,7 @@ using DigitalBank.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DigitalBank.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260903215206_AddBonds")]
+    partial class AddBonds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,22 +33,11 @@ namespace DigitalBank.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("AnnualRatePercent")
-                        .HasColumnType("decimal(5,2)");
-
                     b.Property<int>("CardId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OfferName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("PrincipalAmount")
                         .HasColumnType("decimal(18,2)");
@@ -63,64 +55,9 @@ namespace DigitalBank.Infrastructure.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.HasIndex("OfferId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Bonds", (string)null);
-                });
-
-            modelBuilder.Entity("DigitalBank.Infrastructure.Entities.BondOfferEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("AnnualRatePercent")
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<decimal>("RequiredAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("TermDays")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BondOffers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AnnualRatePercent = 15m,
-                            Name = "ОВДП 3 місяці",
-                            RequiredAmount = 1000m,
-                            TermDays = 90
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AnnualRatePercent = 17m,
-                            Name = "ОВДП 6 місяців",
-                            RequiredAmount = 2000m,
-                            TermDays = 180
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AnnualRatePercent = 19m,
-                            Name = "ОВДП 12 місяців",
-                            RequiredAmount = 5000m,
-                            TermDays = 365
-                        });
                 });
 
             modelBuilder.Entity("DigitalBank.Infrastructure.Entities.CardEntity", b =>
@@ -264,9 +201,6 @@ namespace DigitalBank.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Currency")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("PrincipalAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -373,12 +307,6 @@ namespace DigitalBank.Infrastructure.Migrations
                     b.HasOne("DigitalBank.Infrastructure.Entities.CardEntity", null)
                         .WithMany()
                         .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DigitalBank.Infrastructure.Entities.BondOfferEntity", null)
-                        .WithMany()
-                        .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

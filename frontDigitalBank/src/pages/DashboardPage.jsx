@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Eye, EyeOff, Search, Bell, Headphones } from 'lucide-react'
 import CardsCarousel from '../components/dashboard/CardsCarousel'
 import QuickActions from '../components/dashboard/QuickActions'
+import TransferModal from '../components/dashboard/TransferModal'
 import { useAuthStore } from '../store/useAuthStore'
 import { getUserCards } from '../Servises/cardService'
 import { useNavigate } from 'react-router-dom'
@@ -12,8 +13,18 @@ export default function DashboardPage() {
   const userId = user?.id
   const [cards, setCards] = useState(null)
   const [error, setError] = useState('')
+  const [transferOpen, setTransferOpen] = useState(false)
   const navigate = useNavigate()
- 
+
+  async function refreshCards() {
+    try {
+      const data = await getUserCards(userId)
+      setCards(data)
+    } catch {
+      setError('Не вдалося завантажити картки')
+      setCards([])
+    }
+  }
 
   useEffect(() => {
     if (!userId) return
@@ -32,7 +43,9 @@ export default function DashboardPage() {
     }
 
     fetchCards()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [userId])
 
 
@@ -121,7 +134,7 @@ export default function DashboardPage() {
           />
         )}
 
-        <QuickActions />
+        <QuickActions onTransferClick={() => setTransferOpen(true)} />
       </div>
 
       <div className="hidden space-y-6 lg:block">
@@ -129,5 +142,16 @@ export default function DashboardPage() {
       </div>
 
     </div>
+
+    {transferOpen && (
+      <TransferModal
+        onClose={() => setTransferOpen(false)}
+        cards={cards ?? []}
+        onSuccess={() => {
+          setTransferOpen(false)
+          refreshCards()
+        }}
+      />
+    )}
   </div>
 )}

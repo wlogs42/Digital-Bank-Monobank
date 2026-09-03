@@ -11,6 +11,12 @@ public class AppDbContext : DbContext
 
     public DbSet<UserEntity> Users => Set<UserEntity>();
     public DbSet<CardEntity> Cards => Set<CardEntity>();
+    public DbSet<CardTransactionEntity> CardTransactions => Set<CardTransactionEntity>();
+    public DbSet<CreditEntity> Credits => Set<CreditEntity>();
+    public DbSet<PiggyBankEntity> PiggyBanks => Set<PiggyBankEntity>();
+    public DbSet<DepositEntity> Deposits => Set<DepositEntity>();
+    public DbSet<BondEntity> Bonds => Set<BondEntity>();
+    public DbSet<BondOfferEntity> BondOffers => Set<BondOfferEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

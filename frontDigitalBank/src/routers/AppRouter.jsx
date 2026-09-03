@@ -10,6 +10,9 @@ import CreateCardPage from "../pages/CreateCardPage";
 import CardsPage from "../pages/CardsPage";
 import CardDetailPage from "../pages/CardDetailPage";
 import CreditsPage from "../pages/CreditPage";
+import SavingsPage from "../pages/SavingsPage";
+import BondsPage from "../pages/BondsPage";
+import DepositsPage from "../pages/DepositsPage";
 
 
 export default function AppRouter(){
@@ -29,6 +32,9 @@ export default function AppRouter(){
                     <Route path="/cards/create" element={<CreateCardPage />} />
                     <Route path="/cards/:cardId" element={<CardDetailPage />} />
                     <Route path="/credit" element={<CreditsPage />} />
+                    <Route path="/savings" element={<SavingsPage />} />
+                    <Route path="/bonds" element={<BondsPage />} />
+                    <Route path="/deposits" element={<DepositsPage />} />
                 </Route>
             </Route>
 

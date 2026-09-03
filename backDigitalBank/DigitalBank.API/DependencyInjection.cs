@@ -20,10 +20,21 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICardRepository, CardRepository>();
+        services.AddScoped<ICardTransactionRepository, CardTransactionRepository>();
+        services.AddScoped<ICreditRepository, CreditRepository>();
+        services.AddScoped<IPiggyBankRepository, PiggyBankRepository>();
+        services.AddScoped<IDepositRepository, DepositRepository>();
+        services.AddScoped<IBondRepository, BondRepository>();
+        services.AddScoped<IBondOfferRepository, BondOfferRepository>();
 
         services.AddScoped<RegisterUserService>();
         services.AddScoped<LoginService>();
         services.AddScoped<CreateCardService>();
+        services.AddScoped<TransferService>();
+        services.AddScoped<CreditService>();
+        services.AddScoped<PiggyBankService>();
+        services.AddScoped<DepositService>();
+        services.AddScoped<BondService>();
 
         return services;
     }

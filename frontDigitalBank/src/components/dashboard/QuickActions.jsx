@@ -1,18 +1,21 @@
 import { Send, FileText, Download, PiggyBank } from 'lucide-react'
 
 const actions = [
-  { label: 'Переказ на картку', icon: Send },
-  { label: 'Платіж за IBAN', icon: FileText },
-  { label: 'Поповнити картку', icon: Download },
-  { label: 'Скарбничка', icon: PiggyBank },
+  { label: 'Переказ на картку', icon: Send, key: 'transfer' },
+  { label: 'Платіж за IBAN', icon: FileText, key: 'iban' },
+  { label: 'Поповнити картку', icon: Download, key: 'topup' },
+  { label: 'Скарбничка', icon: PiggyBank, key: 'piggy' },
 ]
 
-export default function QuickActions() {
+export default function QuickActions({ onTransferClick }) {
+  const handlers = { transfer: onTransferClick }
+
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {actions.map(({ label, icon: Icon }) => (
+      {actions.map(({ label, icon: Icon, key }) => (
         <button
           key={label}
+          onClick={handlers[key]}
           className="flex
             min-h-[110px]
             flex-col

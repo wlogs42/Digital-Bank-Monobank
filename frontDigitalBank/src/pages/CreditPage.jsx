@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   WalletCards,
   CalendarDays,
@@ -9,9 +10,70 @@ import {
 } from 'lucide-react'
 
 import Container from '../components/common/Container'
+import Button from '../components/common/Button'
+import TakeCreditModal from '../components/credit/TakeCreditModal'
 import piggy from '../assets/piggy.png'
+import { useAuthStore } from '../store/useAuthStore'
+import { getUserCards } from '../Servises/cardService'
+import { getUserCredits, repayCredit, takeCredit } from '../Servises/creditService'
 
 export default function CreditPage({ userBalance = 0 }) {
+  const user = useAuthStore((s) => s.user)
+  const userId = user?.id
+  const [cards, setCards] = useState([])
+  const [credits, setCredits] = useState([])
+  const [creditModalOpen, setCreditModalOpen] = useState(false)
+  const [repayingId, setRepayingId] = useState(null)
+  const [listError, setListError] = useState('')
+
+  useEffect(() => {
+    if (!userId) return
+    let cancelled = false
+
+    async function load() {
+      try {
+        const [cardsData, creditsData] = await Promise.all([
+          getUserCards(userId),
+          getUserCredits(userId),
+        ])
+        if (!cancelled) {
+          setCards(cardsData)
+          setCredits(creditsData)
+        }
+      } catch {
+        if (!cancelled) setListError('Не вдалося завантажити дані')
+      }
+    }
+
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
+
+  async function refreshCredits() {
+    try {
+      const data = await getUserCredits(userId)
+      setCredits(data)
+    } catch {
+      setListError('Не вдалося оновити список кредитів')
+    }
+  }
+
+  async function handleRepay(creditId, cardId) {
+    setRepayingId(creditId)
+    try {
+      await repayCredit(creditId, cardId)
+      await refreshCredits()
+    } catch (err) {
+      setListError(err.response?.data?.error ?? 'Не вдалося погасити кредит')
+    } finally {
+      setRepayingId(null)
+    }
+  }
+
+  const activeCredits = credits.filter((c) => !c.repaidAtUtc)
+
   return (
     <Container className="space-y-8">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -155,7 +217,10 @@ export default function CreditPage({ userBalance = 0 }) {
               Переглянути умови
             </div>
           </button>
-          <button className="group rounded-card border border-stroke bg-surface p-5 text-left transition hover:border-brand-500/40 hover:bg-surface-2">
+          <button
+            onClick={() => setCreditModalOpen(true)}
+            className="group rounded-card border border-stroke bg-surface p-5 text-left transition hover:border-brand-500/40 hover:bg-surface-2"
+          >
             <div className="flex items-start justify-between">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400">
                 <CalendarDays size={21} />
@@ -178,7 +243,42 @@ export default function CreditPage({ userBalance = 0 }) {
         </div>
       </section>
 
+      {activeCredits.length > 0 && (
+        <section>
+          <div className="mb-4">
+            <h2 className="font-display text-xl font-bold text-fg">Активні кредити</h2>
+          </div>
 
+          {listError && <p className="mb-3 text-sm text-red-400">{listError}</p>}
+
+          <div className="space-y-3">
+            {activeCredits.map((credit) => (
+              <div
+                key={credit.id}
+                className="flex flex-col gap-3 rounded-card border border-stroke bg-surface p-4 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <p className="font-semibold text-fg">
+                    {credit.principalAmount.toLocaleString('uk-UA')} ₴
+                  </p>
+                  <p className="text-sm text-muted">
+                    Повернути до {credit.dueDate} · борг зараз{' '}
+                    <span className="font-medium text-fg">
+                      {credit.owedAmountNow.toLocaleString('uk-UA')} ₴
+                    </span>
+                  </p>
+                </div>
+                <Button
+                  disabled={repayingId === credit.id}
+                  onClick={() => handleRepay(credit.id, credit.cardId)}
+                >
+                  {repayingId === credit.id ? 'Гасимо...' : 'Погасити'}
+                </Button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Archive */}
       <div className="flex justify-center pb-2">
@@ -187,6 +287,20 @@ export default function CreditPage({ userBalance = 0 }) {
           <ArrowRight size={15} />
         </button>
       </div>
+
+      {creditModalOpen && (
+        <TakeCreditModal
+          cards={cards}
+          onClose={() => setCreditModalOpen(false)}
+          onSubmit={({ cardId, amount, dueDate }) =>
+            takeCredit({ userId, cardId, amount, dueDate })
+          }
+          onSuccess={() => {
+            setCreditModalOpen(false)
+            refreshCredits()
+          }}
+        />
+      )}
     </Container>
   )
 }
