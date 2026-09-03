@@ -7,6 +7,8 @@ public record CardResponse(
     int Id,
     int UserId,
     string CardNumber,
+    string ExpirationDate, 
+    string SecurityCode, 
     string CardType,
     string Name,
     string FirstName,
@@ -14,6 +16,7 @@ public record CardResponse(
     Currency BalanceCurrency)
 {
     public static CardResponse FromDomain(Card card) => new(
-        card.Id, card.UserId, card.CardNumber, card.CardType,
+        card.Id, card.UserId, card.CardNumber, card.ExpirationDate, 
+        card.SecurityCode, card.CardType,
         card.Name, card.FirstName, card.Balance.Amount, card.Balance.Currency);
 }

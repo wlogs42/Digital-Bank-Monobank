@@ -15,7 +15,7 @@ const schema = z.object({
 
 const currencyToEnum = {UAH: 0, USD: 1, EUR: 0}
 
-export default function CreateCardForm({userId, onCreated}){
+export default function CreateCardForm({userId, onCreated, onCancel}){
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(schema),
@@ -43,23 +43,31 @@ export default function CreateCardForm({userId, onCreated}){
         <label className="block">
           <span className="text-sm text-muted">Тип картки</span>
           <select {...register('cardType')} className="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-            <option value="Debit">Дебетова</option>
-            <option value="Credit">Кредитна</option>
+            <option value="Debit" className="bg-surface text-fg">Дебетова</option>
+            <option value="Credit" className="bg-surface text-fg">Кредитна</option>
           </select>
         </label>
         <label className="block">
           <span className="text-sm text-muted">Валюта</span>
           <select {...register('currency')} className="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-            <option value="UAH">UAH</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
+            <option value="UAH" className="bg-surface text-fg">UAH</option>
+            <option value="USD" className="bg-surface text-fg">USD</option>
+            <option value="EUR" className="bg-surface text-fg">EUR</option>
           </select>
         </label>
       </div>
       <TextField label="Початковий баланс" type="number" step="0.01" {...register('initialAmount')} error={errors.initialAmount?.message} />
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? 'Створюємо...' : 'Відкрити картку'}
-      </Button>
+      
+      <div className='flex gap-3'>
+          <Button type="button" onClick={onCancel} variant='ghost' className="w-1/3" disabled={isSubmitting}>
+            Скасувати
+          </Button>
+        
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? 'Створюємо...' : 'Відкрити картку'}
+        </Button>
+      </div>
+      
     </form>
   )
 }

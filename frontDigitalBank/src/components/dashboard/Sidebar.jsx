@@ -1,21 +1,23 @@
 import { NavLink } from 'react-router-dom'
 import {
-  Home, Wallet, ArrowLeftRight, Repeat,
-  PiggyBank, BarChart3, History, Settings, LogOut,
+  Home, CreditCard, Repeat,
+  PiggyBank, LogOut, MoreHorizontal,Percent,ArrowLeftRight,Wallet
 } from 'lucide-react'
 import Logo from '../common/Logo'
 import { useAuthStore } from '../../store/useAuthStore'
 
-const items = [
+const items= [
   { label: 'Головна', icon: Home, to: '/dashboard', enabled: true },
+  { label: 'Картки', icon: CreditCard, to: '/cards', enabled: true },
   { label: 'Рахунки', icon: Wallet, to: '#', enabled: false },
-  { label: 'Платежі', icon: ArrowLeftRight, to: '#', enabled: false },
   { label: 'Перекази', icon: Repeat, to: '#', enabled: false },
-  { label: 'Скарбнички', icon: PiggyBank, to: '#', enabled: false },
-  { label: 'Аналітика', icon: BarChart3, to: '#', enabled: false },
-  { label: 'Історія', icon: History, to: '#', enabled: false },
-  { label: 'Налаштування', icon: Settings, to: '#', enabled: false },
+  { label: 'Платежі', icon: ArrowLeftRight, to: '#', enabled: false },
+  { label: 'Накопичення', icon: PiggyBank, to: '#', enabled: false },
+  { label: 'Кредити', icon: Percent, to: '/credit', enabled: true },
+  { label: 'Ще', icon: MoreHorizontal, to: '#', enabled: false },
 ]
+
+
 
 export default function Sidebar() {
   const { user, logout } = useAuthStore()

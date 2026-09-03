@@ -6,6 +6,10 @@ import LoginPage from "../pages/LoginPage";
 import DashboardPage from "../pages/DashboardPage";
 import ProtectedRoute from './ProtectedRoute'
 import DashboardLayout from "../layouts/DashboardLayout";
+import CreateCardPage from "../pages/CreateCardPage";
+import CardsPage from "../pages/CardsPage";
+import CardDetailPage from "../pages/CardDetailPage";
+import CreditsPage from "../pages/CreditPage";
 
 
 export default function AppRouter(){
@@ -17,10 +21,14 @@ export default function AppRouter(){
                 <Route path="/login" element={<LoginPage/>}></Route>
 
             </Route>
-            
+
             <Route element={<ProtectedRoute />}>
                 <Route element={<DashboardLayout/>}>
                     <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/cards" element={<CardsPage />} />
+                    <Route path="/cards/create" element={<CreateCardPage />} />
+                    <Route path="/cards/:cardId" element={<CardDetailPage />} />
+                    <Route path="/credit" element={<CreditsPage />} />
                 </Route>
             </Route>
 
