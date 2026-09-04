@@ -13,6 +13,8 @@ import CreditsPage from "../pages/CreditPage";
 import SavingsPage from "../pages/SavingsPage";
 import BondsPage from "../pages/BondsPage";
 import DepositsPage from "../pages/DepositsPage";
+import ProfilePage from "../pages/ProfilePage";
+import MorePage from "../pages/MorePage";
 
 
 export default function AppRouter(){
@@ -35,6 +37,8 @@ export default function AppRouter(){
                     <Route path="/savings" element={<SavingsPage />} />
                     <Route path="/bonds" element={<BondsPage />} />
                     <Route path="/deposits" element={<DepositsPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/more" element={<MorePage />} />
                 </Route>
             </Route>
 

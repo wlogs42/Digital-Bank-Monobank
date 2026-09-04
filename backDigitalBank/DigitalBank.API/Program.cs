@@ -39,6 +39,12 @@ app.MapPost("/users", async (RegisterUserRequest request, RegisterUserService se
         : Results.Ok(UserResponse.FromDomain(user));
 });
 
+app.MapGet("/users/{id:int}", async (int id, IUserRepository repo, CancellationToken ct) =>
+{
+    var user = await repo.GetByIdAsync(id, ct);
+    return user is null ? Results.NotFound() : Results.Ok(UserResponse.FromDomain(user));
+});
+
 app.MapPost("/login", async (LoginRequest request, LoginService service, CancellationToken cancellationToken) =>
 {
     var (user, error) = await service.LoginAsync(request.Email, request.Password, cancellationToken);

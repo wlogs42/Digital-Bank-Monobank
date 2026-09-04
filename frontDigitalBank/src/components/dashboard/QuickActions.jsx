@@ -7,9 +7,18 @@ const actions = [
   { label: 'Скарбничка', icon: PiggyBank, key: 'piggy' },
 ]
 
-export default function QuickActions({ onTransferClick }) {
-  const handlers = { transfer: onTransferClick }
-
+export default function QuickActions({ 
+  onTransferClick, 
+  onIbanClick, 
+  onTopUpClick, 
+  onSavingClick 
+}) {
+  const handlers = {
+    transfer: onTransferClick,
+    iban: onIbanClick,
+    topup: onTopUpClick,
+    piggy: onSavingClick, 
+  }
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {actions.map(({ label, icon: Icon, key }) => (

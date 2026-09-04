@@ -191,7 +191,7 @@ export default function CreditPage({ userBalance = 0 }) {
             <div className="pointer-events-none absolute -bottom-2 -right-2 w-42 sm:w-46">
                 <img
                 src={piggy}
-                alt="DigitalBank mascot"
+                alt="PiggyBank"
                 className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-105"
                 />
             </div>

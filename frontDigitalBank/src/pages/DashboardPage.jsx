@@ -6,6 +6,12 @@ import TransferModal from '../components/dashboard/TransferModal'
 import { useAuthStore } from '../store/useAuthStore'
 import { getUserCards } from '../Servises/cardService'
 import { useNavigate } from 'react-router-dom'
+import { getCardTransactions } from '../Servises/transferService'
+import TransfersList from '../components/transfers/TransfersList'
+import SavingsWidget from '../components/dashboard/SavingsWidget'
+import PiggyBankModal from '../components/savings/PiggyBankModal'
+import { getUserPiggyBanks } from '../Servises/piggyBankService'
+
 
 export default function DashboardPage() {
   const [hidden, setHidden] = useState(false)
@@ -15,6 +21,15 @@ export default function DashboardPage() {
   const [error, setError] = useState('')
   const [transferOpen, setTransferOpen] = useState(false)
   const navigate = useNavigate()
+  const [piggyBanks, setPiggyBanks] = useState([])
+  const [createPiggyOpen, setCreatePiggyOpen] = useState(false)
+
+  const [selectedCardId, setSelectedCardId] = useState(null)
+  const[transfers, setTransfers] = useState(null)
+
+  const handleSelectCard = (id) => {
+    setSelectedCardId(id) 
+  }
 
   async function refreshCards() {
     try {
@@ -27,27 +42,58 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
-    if (!userId) return
-    let cancelled = false
+  if (!userId) return
+  let cancelled = false
 
-    async function fetchCards() {
-      try {
-        const data = await getUserCards(userId)
-        if (!cancelled) setCards(data)
-      } catch {
-        if (!cancelled) {
-          setError('Не вдалося завантажити картки')
-          setCards([])
+  async function fetchDashboardData() {
+    try {
+      const [cardsData, piggyData] = await Promise.all([
+        getUserCards(userId),
+        getUserPiggyBanks(userId).catch(() => []),
+      ])
+
+      if (!cancelled) {
+        setCards(cardsData)
+        setPiggyBanks(piggyData)
+      }
+    } catch {
+      if (!cancelled) {
+        setError('Не вдалося завантажити дані')
+        setCards([])
+      }
+    }
+  }
+
+  fetchDashboardData()
+  return () => {
+    cancelled = true
+  }
+}, [userId])
+
+  useEffect(()=>{
+    let cancelled = false
+    async function fetchTransfers(){
+      if(!selectedCardId){
+        setTransfers([])
+        return
+      }
+      try{
+        const data = await getCardTransactions(selectedCardId)
+        if(!cancelled) {
+          setTransfers(data)
+        }
+      }catch{
+        if(!cancelled){
+          setTransfers([])
         }
       }
     }
 
-    fetchCards()
-    return () => {
-      cancelled = true
+    fetchTransfers()
+    return () =>{
+      cancelled=true
     }
-  }, [userId])
-
+  }, [selectedCardId])
 
   const totalBalance = (cards ?? []).reduce((sum, c) => sum + (c.balanceAmount || 0), 0)
 
@@ -128,17 +174,30 @@ export default function DashboardPage() {
         {cards && cards.length > 0 && (
           <CardsCarousel
             cards={cards}
+            selectedCardId={selectedCardId}
+            onSelectCard={handleSelectCard}
             onAddCard={() =>navigate('/cards/create')
             
             }
           />
         )}
 
-        <QuickActions onTransferClick={() => setTransferOpen(true)} />
+        <QuickActions onTransferClick={() => setTransferOpen(true)} 
+          onSavingClick={() => navigate('/savings')}/>
+
+          {selectedCardId && (
+            <TransfersList transfers={transfers} cardId={selectedCardId} />
+          )}
+        
       </div>
 
       <div className="hidden space-y-6 lg:block">
-        {/* статистика витрат і накопичень */}
+        <div className="space-y-6">
+        <SavingsWidget
+          pots={piggyBanks}
+          onCreateClick={() => setCreatePiggyOpen(true)}
+        />
+      </div>
       </div>
 
     </div>
@@ -153,5 +212,11 @@ export default function DashboardPage() {
         }}
       />
     )}
+
+    <PiggyBankModal
+        open={createPiggyOpen}
+        onClose={() => setCreatePiggyOpen(false)}
+        onSuccess={(newPiggy) => setPiggyBanks((prev) => [newPiggy, ...prev])}
+      />
   </div>
 )}

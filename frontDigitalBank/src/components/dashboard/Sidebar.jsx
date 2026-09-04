@@ -1,7 +1,7 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink,Link } from 'react-router-dom'
 import {
-  Home, CreditCard, Repeat,
-  PiggyBank, LogOut, MoreHorizontal,Percent,ArrowLeftRight,Wallet
+  Home, CreditCard,
+  PiggyBank, LogOut, MoreHorizontal,Percent
 } from 'lucide-react'
 import Logo from '../common/Logo'
 import { useAuthStore } from '../../store/useAuthStore'
@@ -9,12 +9,11 @@ import { useAuthStore } from '../../store/useAuthStore'
 const items= [
   { label: 'Головна', icon: Home, to: '/dashboard', enabled: true },
   { label: 'Картки', icon: CreditCard, to: '/cards', enabled: true },
-  { label: 'Рахунки', icon: Wallet, to: '#', enabled: false },
-  { label: 'Перекази', icon: Repeat, to: '#', enabled: false },
-  { label: 'Платежі', icon: ArrowLeftRight, to: '#', enabled: false },
+//   { label: 'Рахунки', icon: Wallet, to: '#', enabled: false },
+//   { label: 'Платежі', icon: ArrowLeftRight, to: '#', enabled: false },
   { label: 'Накопичення', icon: PiggyBank, to: '/savings', enabled: true },
   { label: 'Кредити', icon: Percent, to: '/credit', enabled: true },
-  { label: 'Ще', icon: MoreHorizontal, to: '#', enabled: false },
+  { label: 'Ще', icon: MoreHorizontal, to: '/more', enabled: true },
 ]
 
 
@@ -60,7 +59,8 @@ export default function Sidebar() {
       </div>
 
       <div>
-        <div className="mb-3 flex items-center gap-3 rounded-xl bg-surface-2 px-3 py-2.5">
+        <Link to={'/profile'}>
+          <div className="mb-3 flex items-center gap-3 rounded-xl bg-surface-2 px-3 py-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-500/20 font-display text-sm font-semibold text-brand-300">
             {initialName}
           </div>
@@ -68,6 +68,8 @@ export default function Sidebar() {
             <p className="font-medium text-fg">{displayName} {lastNameInitial}</p>
           </div>
         </div>
+        </Link>
+        
         <button
           onClick={logout}
           className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted hover:bg-surface-2 hover:text-fg"
