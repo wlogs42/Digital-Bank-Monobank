@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<DepositEntity> Deposits => Set<DepositEntity>();
     public DbSet<BondEntity> Bonds => Set<BondEntity>();
     public DbSet<BondOfferEntity> BondOffers => Set<BondOfferEntity>();
+    public DbSet<InstallmentPlanEntity> InstallmentPlans => Set<InstallmentPlanEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -227,4 +227,29 @@ app.MapPost("/bonds/{bondId:int}/redeem", async (int bondId, RedeemBondRequest r
         : Results.Ok(BondResponse.FromDomain(bond));
 });
 
+app.MapPost("/installment-plans", async (OpenInstallmentPlanRequest request, InstallmentPlanService service, CancellationToken cancellationToken) =>
+{
+    var (plan, error) = await service.OpenAsync(
+        request.UserId, request.CardId, request.Amount, request.MonthsCount, cancellationToken);
+
+    return plan is null
+        ? Results.BadRequest(new { error })
+        : Results.Ok(InstallmentPlanResponse.FromDomain(plan));
+});
+
+app.MapGet("/installment-plans/user/{userId:int}", async (int userId, IInstallmentPlanRepository planRepo, CancellationToken cancellationToken) =>
+{
+    var plans = await planRepo.GetByUserIdAsync(userId, cancellationToken);
+    return Results.Ok(plans.Select(InstallmentPlanResponse.FromDomain));
+});
+
+app.MapPost("/installment-plans/{planId:int}/pay", async (int planId, PayInstallmentRequest request, InstallmentPlanService service, CancellationToken cancellationToken) =>
+{
+    var (plan, error) = await service.PayInstallmentAsync(planId, request.CardId, cancellationToken);
+
+    return plan is null
+        ? Results.BadRequest(new { error })
+        : Results.Ok(InstallmentPlanResponse.FromDomain(plan));
+});
+
 app.Run();

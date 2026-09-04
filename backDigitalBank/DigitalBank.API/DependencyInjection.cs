@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IDepositRepository, DepositRepository>();
         services.AddScoped<IBondRepository, BondRepository>();
         services.AddScoped<IBondOfferRepository, BondOfferRepository>();
+        services.AddScoped<IInstallmentPlanRepository, InstallmentPlanRepository>();
 
         services.AddScoped<RegisterUserService>();
         services.AddScoped<LoginService>();
@@ -35,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<PiggyBankService>();
         services.AddScoped<DepositService>();
         services.AddScoped<BondService>();
+        services.AddScoped<InstallmentPlanService>();
 
         return services;
     }

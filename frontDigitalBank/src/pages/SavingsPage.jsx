@@ -227,13 +227,15 @@ export default function SavingsPage() {
         onSuccess={(newPiggy) => setPiggyBanks((prev) => [newPiggy, ...prev])}
       />
 
-      <DepositPiggyBankModal
-        open={Boolean(depositTargetPiggy)}
-        piggyBank={depositTargetPiggy}
-        cards={cards}
-        onClose={() => setDepositTargetPiggy(null)}
-        onSuccess={handleDepositSuccess}
-      />
+      {depositTargetPiggy && (
+        <DepositPiggyBankModal
+          open
+          piggyBank={depositTargetPiggy}
+          cards={cards}
+          onClose={() => setDepositTargetPiggy(null)}
+          onSuccess={handleDepositSuccess}
+        />
+      )}
     </Container>
   )
 }
